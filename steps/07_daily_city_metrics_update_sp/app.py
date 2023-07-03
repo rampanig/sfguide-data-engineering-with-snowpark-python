@@ -16,6 +16,7 @@ def table_exists(session, schema='', name=''):
     return exists
 
 def create_daily_city_metrics_table(session):
+    _ = session.sql("USE DATABASE HOL_DB").collect()
     SHARED_COLUMNS= [T.StructField("DATE", T.DateType()),
                                         T.StructField("CITY_NAME", T.StringType()),
                                         T.StructField("COUNTRY_DESC", T.StringType()),
@@ -36,6 +37,8 @@ def create_daily_city_metrics_table(session):
 
 
 def merge_daily_city_metrics(session):
+    _ = session.sql("USE DATABASE HOL_DB").collect()
+    _ = session.sql("USE WAREHOUSE HOL_WH").collect()
     _ = session.sql('ALTER WAREHOUSE HOL_WH SET WAREHOUSE_SIZE = XLARGE WAIT_FOR_COMPLETION = TRUE').collect()
 
     print("{} records in stream".format(session.table('HARMONIZED.ORDERS_STREAM').count()))
